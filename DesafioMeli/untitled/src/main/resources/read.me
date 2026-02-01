@@ -1,0 +1,60 @@
+# Product Management & Comparison System
+
+Eu desenvolvi esta API REST utilizando **Spring Boot** para gerenciar um catálogo de produtos e realizar comparações dinâmicas entre eles, incluindo suporte a categorias específicas como Smartphones.
+
+## Arquitetura e Decisões Técnicas
+
+Eu utilizei o padrão de **Arquitetura em Camadas (Layered Architecture)** para organizar o projeto. Minhas principais decisões foram:
+
+* **Separação de Responsabilidades:** Dividi o código entre Controller (interface HTTP), Service (regras de negócio) e Repository (persistência), facilitando a manutenção.
+* **Estratégia de Herança (JPA):** Implementei a estratégia `SINGLE_TABLE` com `DiscriminatorValue`. Escolhi essa abordagem para permitir que produtos genéricos e smartphones coexistam na mesma tabela, simplificando consultas complexas e otimizando a performance.
+* **Records e Imutabilidade:** Usei Java Records para a camada de DTO (Data Transfer Object), garantindo que os dados de resposta sejam imutáveis e seguros.
+* **Filtragem Dinâmica de Campos:** Implementei o uso de `MappingJacksonValue` e `JsonFilter`. Fiz isso para permitir que o usuário da API escolha exatamente quais campos quer ver no endpoint de comparação, evitando o envio de dados desnecessários (Overfetching).
+* **Tratamento de Dados Nulos:** Configurei a serialização para ignorar campos nulos, garantindo que a resposta JSON seja limpa e contenha apenas informações relevantes.
+
+---
+
+## 🚀 Como Usar
+
+### Pré-requisitos
+* Java 17 ou superior
+* Maven 3.6+
+
+### Instalação e Execução
+1. Clone o repositório.
+2. Na raiz do projeto, execute:
+   ```bash
+   mvn spring-boot:run
+3. A API estará disponível em: `URL_HACKERRANK`
+
+---
+
+## 🛠️ Métodos Disponíveis (Endpoints)
+
+### Gerenciamento de Modelos (`/model`)
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| **GET** | `/model` | Eu retorno a lista de todos os produtos cadastrados. |
+| **POST** | `/model` | Eu crio um novo produto. Valido se o ID já existe e retorno `400` em caso de duplicidade. |
+| **GET** | `/model/{id}` | Eu busco os detalhes de um produto específico. |
+| **DELETE** | `/model/{id}` | Eu removo um produto pelo seu ID. |
+
+### Comparação de Produtos (`/products/compare`)
+| Método | Endpoint | Parâmetros | Descrição |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/products/compare` | `ids`, `fields` | Eu comparo produtos pelos IDs e filtro os campos dinamicamente conforme solicitado. |
+
+**Exemplo de uso:**
+`GET URL_HACKERRANK/products/compare?ids=1,2&fields=name,price`
+
+### Manutenção
+* **DELETE** `/erase`: Eu realizo a limpeza completa do banco de dados.
+
+---
+
+## 📋 Tecnologias que utilizei
+* **Spring Boot 3**
+* **Spring Data JPA**
+* **H2 Database** (Banco de dados em memória para testes rápidos)
+* **Jackson** (Para manipulação e filtragem de JSON)
+* **Lombok** (Para reduzir a verbosidade do código)
